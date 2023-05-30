@@ -41,7 +41,6 @@ public class Livelock {
                             System.out.println(name + " notified that door is passed");
                         }
                         isPerson1Turn = !isPerson1Turn;
-                        continue;
                     }
                 }
             }
