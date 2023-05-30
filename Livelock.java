@@ -36,12 +36,12 @@ public class Livelock {
                         if (this == person1 && person2.isPassed == false
                             || this == person2 && person1.isPassed == false) {
                             System.out.println(name + " decided to wait for another person");
-                            isPerson1Turn = !isPerson1Turn;
-                            continue;
                         } else {
                             isPassed = true;
                             System.out.println(name + " notified that door is passed");
                         }
+                        isPerson1Turn = !isPerson1Turn;
+                        continue;
                     }
                 }
             }
