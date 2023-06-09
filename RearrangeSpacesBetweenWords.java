@@ -32,7 +32,7 @@ public class RearrangeSpacesBetweenWords {
             StringBuilder sb = new StringBuilder(words[0]);
             for (int i = 1; i < words.length; i++) {
                 sb.append(sp);
-                sb.append(words[i].trim());
+                sb.append(words[i]);
             }
             return sb.toString() + adSp;
         }
