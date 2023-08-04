@@ -1,4 +1,6 @@
-
+/**
+ * @author Eduard_Sardyka
+ */
 public class DeadLock {
 
 

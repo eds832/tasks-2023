@@ -1,29 +1,33 @@
-
+/**
+ * @author Eduard_Sardyka
+ */
 public class IsPalindrome {
-
-    public static void main(String[] args) {
-        System.out.println(isPalindrome("abcba"));
-        System.out.println(isPalindrome("abcddcba"));
-        System.out.println(isPalindrome("aba"));
-        System.out.println(isPalindrome("a"));
-        System.out.println(isPalindrome(""));
-        System.out.println(isPalindrome("abcbaa"));
-        System.out.println(isPalindrome("abcddcbas"));
-        System.out.println(isPalindrome("abab"));
-        System.out.println(isPalindrome("ab"));
+    static class Solution {
+        /**
+         * Check if a given not null string is a palindrome (the text equals reverted one)
+         */
+        public boolean isPalindrome(String text) {
+            int maxElemIndex = text.length() - 1;
+            int halfLength = text.length() / 2;
+            for (int right = 0; right < halfLength; right++) {
+                int left = maxElemIndex - right;
+                if (text.charAt(right) != text.charAt(left)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
-    private static boolean isPalindrome(String text) {
-        if(text == null) {
-            throw new IllegalArgumentException("text is null");
-        }
-        int length = text.length();
-        for (int i = 0; i < length/2; i++) {
-            int j = length - i - 1;
-            if(text.charAt(i) != text.charAt(j)) {
-                return false;
-            }
-        }
-        return true;
+    public static void main(String[] args) {
+        System.out.println(new IsPalindrome.Solution().isPalindrome("abcba"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("abcddcba"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("aba"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("a"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome(""));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("abcbaa"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("abcddcbas"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("abab"));
+        System.out.println(new IsPalindrome.Solution().isPalindrome("ab"));
     }
 }
