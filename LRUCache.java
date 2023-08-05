@@ -29,7 +29,7 @@ public class LRUCache {
         // load Factor = 1.0, accessOrder = true
         cache = new LinkedHashMap(capacity, 1.0f, true) {
             @Override
-            // LinkedList method
+            // LinkedHashMap method
             protected boolean removeEldestEntry(Map.Entry eldest) {
                 return size() > capacity;
             }
