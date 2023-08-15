@@ -45,7 +45,7 @@ class UniqueNumberOfOccurrences {
             return true;
         }
     
-        public static int indexOf(int val, int[] arr, int maxIndex) {
+        public int indexOf(int val, int[] arr, int maxIndex) {
             for (int i = 0; i < maxIndex; i++) {
                 if (val == arr[i]) return i;
             }
