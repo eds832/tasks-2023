@@ -22,33 +22,31 @@ class UniqueNumberOfOccurrences {
         public boolean uniqueOccurrences(int[] arr) {
             int[] keys = new int[arr.length];
             int[] values = new int[arr.length];
-            int maxIndex = -1;
-            for(int val: arr) {
+            int maxIndex = 1;
+            keys[0] = arr[0];
+            values[0] = 1;
+            for(int i = 1; i < arr.length; i++) {
+                int val = arr[i];
                 int index = indexOf(val, keys, maxIndex);
                 if(index < 0) {
-                    maxIndex++;
                     keys[maxIndex] = val;
-                    values[maxIndex] = 1;
+                    values[maxIndex++] = 1;
                 } else {
                     values[index] = values[index] + 1;
                 }
             }
-            int[] check = new int[maxIndex + 1];
-            int maxCheck = -1;
-            for(int i = 0; i <= maxIndex; i++) {
+            int[] check = new int[maxIndex];
+            int maxCheck = 0;
+            for(int i = 0; i < maxIndex; i++) {
                 int val = values[i];
-                if(indexOf(val, check, maxCheck) >= 0) {
-                    return false;
-                } else {
-                    maxCheck++;
-                    check[maxCheck] = val;
-                }
+                if(indexOf(val, check, maxCheck) >= 0) return false;
+                check[maxCheck++] = val;
             }
             return true;
         }
-
+    
         public static int indexOf(int val, int[] arr, int maxIndex) {
-            for (int i = 0; i <= maxIndex; i++) {
+            for (int i = 0; i < maxIndex; i++) {
                 if (val == arr[i]) return i;
             }
             return -1;
