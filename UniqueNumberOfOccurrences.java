@@ -20,6 +20,8 @@ class UniqueNumberOfOccurrences {
          * -1000 <= arr[i] <= 1000
          */
         public boolean uniqueOccurrences(int[] arr) {
+            // A mimic of HashMap with 2 int arrays (keys and values)
+            // They take less memory than HashMap
             int[] keys = new int[arr.length];
             int[] values = new int[arr.length];
             int maxIndex = 1;
@@ -32,7 +34,7 @@ class UniqueNumberOfOccurrences {
                     keys[maxIndex] = val;
                     values[maxIndex++] = 1;
                 } else {
-                    values[index] = values[index] + 1;
+                    values[index] +=1;
                 }
             }
             int[] check = new int[maxIndex];
