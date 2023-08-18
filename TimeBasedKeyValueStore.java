@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +48,7 @@ public class TimeBasedKeyValueStore {
  * timeMap.set("foo", "bar", 1);  // store the key "foo" and value "bar" along with timestamp = 1.
  * timeMap.get("foo", 1);         // return "bar"
  * timeMap.get("foo", 3);         // return "bar", since there is no value corresponding to foo at
- * timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".
+ *                     timestamp 3 and timestamp 2, then the only value is at timestamp 1 is "bar".
  * timeMap.set("foo", "bar2", 4); // store the key "foo" and value "bar2" along with timestamp = 4.
  * timeMap.get("foo", 4);         // return "bar2"
  * timeMap.get("foo", 5);         // return "bar2"
@@ -62,15 +63,15 @@ public class TimeBasedKeyValueStore {
  */
 class TimeMap {
 
-    private Map<String, ArrayList<TimeValue>> map = new HashMap<>();
+    private Map<String, List<TimeValue>> map = new HashMap<>();
 
     public TimeMap() {
     }
 
     public void set(String key, String value, int timestamp) {
-        ArrayList<TimeValue> list = map.get(key);
+        List<TimeValue> list = map.get(key);
         if (list == null) {
-            ArrayList<TimeValue> timeValues = new ArrayList<>();
+            List<TimeValue> timeValues = new ArrayList<>();
             TimeValue timeValue = new TimeValue(value, timestamp);
             timeValues.add(timeValue);
             map.put(key, timeValues);
@@ -80,14 +81,15 @@ class TimeMap {
     }
 
     public String get(String key, int timestamp) {
-        ArrayList<TimeValue> list = map.get(key);
+        List<TimeValue> list = map.get(key);
         if (list == null || list.get(0).getTimestamp() > timestamp) {
             return "";
         }
         int index = Collections.binarySearch(list, new TimeValue(key, timestamp),
             (tv1, tv2) -> tv1.getTimestamp() - tv2.getTimestamp());
         if (index < 0) {
-            //If the key is not present, BinarySearch returns "(-(insertion point) - 1)"
+            // If the key = new TimeValue(key, timestamp) is not present,
+            // BinarySearch returns "(-(insertion point) - 1)"
             index = -index;
             index -= 2;
         }
