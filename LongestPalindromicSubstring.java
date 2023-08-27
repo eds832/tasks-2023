@@ -29,9 +29,11 @@ public class LongestPalindromicSubstring {
             int beginIndex = 0;
             int lastIndex = 0;
             int length = s.length();
-            int maxIndex = length - 1;
+            int add = 0;
             for (int i = 1; i < length; i++) {
-                if (s.charAt(i) == s.charAt(i - 1)) {
+                int start = i - add - 1;
+                int end = i + add;
+                if (start >= 0 && end < length && s.charAt(start) == s.charAt(end)) {
                     // if substring like "bb", next step: "abba",...
                     int begin = i - 1;
                     int last = i;
@@ -41,13 +43,19 @@ public class LongestPalindromicSubstring {
                             maxLength = currentLength;
                             beginIndex = begin;
                             lastIndex = last;
+                            add = maxLength / 2;
                         }
                         begin--;
                         last++;
                     }
                 }
-                if (i < maxIndex && s.charAt(i + 1) == s.charAt(i - 1)) {
-                    // if substring like "bab" or "bbb", next step: "dbabd",...
+            }
+            int maxIndex = length - 1 - add;
+            for (int i = 1 + add; i < maxIndex; i++) {
+                int start = i - add - 1;
+                int end = i + add + 1;
+                if (start >= 0 && end < length && s.charAt(end) == s.charAt(start)) {
+                    // if substring like "bab" or "bbb", next step: "kbabk",...
                     int begin = i - 1;
                     int last = i + 1;
                     while (begin >= 0 && last < length && s.charAt(begin) == s.charAt(last)) {
@@ -56,6 +64,7 @@ public class LongestPalindromicSubstring {
                             maxLength = currentLength;
                             beginIndex = begin;
                             lastIndex = last;
+                            add = maxLength / 2;
                         }
                         begin--;
                         last++;
