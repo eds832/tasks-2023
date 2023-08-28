@@ -4,6 +4,7 @@ public class PalindromeNumber {
     }
 
     /**
+     * https://leetcode.com/problems/palindrome-number/
      * Given an integer x, return true if x is a
      * palindrome, and false otherwise.
      * Example 1:
@@ -16,8 +17,16 @@ public class PalindromeNumber {
         if(x < 0) {
             return false;
         }
-        StringBuilder sb = new StringBuilder();
-        sb.append(x);
-        return sb.toString().equals(sb.reverse().toString());
+        return reverse(x) == x;
+    }
+
+    private static long reverse(int x) {
+        long result = 0;
+        while (x != 0) {
+            result = result * 10;
+            result = result + x % 10;
+            x = x / 10;
+        }
+        return result;
     }
 }

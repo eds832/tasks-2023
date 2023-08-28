@@ -34,7 +34,7 @@ class UniqueNumberOfOccurrences {
                     keys[maxIndex] = val;
                     values[maxIndex++] = 1;
                 } else {
-                    values[index] +=1;
+                    values[index] += 1;
                 }
             }
             int[] check = new int[maxIndex];
