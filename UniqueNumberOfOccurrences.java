@@ -21,27 +21,25 @@ class UniqueNumberOfOccurrences {
          */
         public boolean uniqueOccurrences(int[] arr) {
             // A mimic of HashMap with 2 int arrays (keys and values)
-            // They take less memory than HashMap
+            // They take less memory than HashMap, work faster
             int[] keys = new int[arr.length];
             int[] values = new int[arr.length];
-            int maxIndex = 1;
-            keys[0] = arr[0];
-            values[0] = 1;
-            for(int i = 1; i < arr.length; i++) {
+            int maxIndex = 0;
+            for(int i = 0; i < arr.length; i++) {
                 int val = arr[i];
                 int index = indexOf(val, keys, maxIndex);
                 if(index < 0) {
                     keys[maxIndex] = val;
                     values[maxIndex++] = 1;
                 } else {
-                    values[index] += 1;
+                    values[index]++;
                 }
             }
             int[] check = new int[maxIndex];
             int maxCheck = 0;
             for(int i = 0; i < maxIndex; i++) {
                 int val = values[i];
-                if(indexOf(val, check, maxCheck) >= 0) return false;
+                if(indexOf(val, check, maxCheck) > -1) return false;
                 check[maxCheck++] = val;
             }
             return true;
