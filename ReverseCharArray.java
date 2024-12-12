@@ -1,9 +1,22 @@
+import java.util.Arrays;
+
 public class ReverseCharArray {
 
     public static void main(String[] args) {
         char[] chars = new char[] {'a', 'b', 'c'};
         chars = reverseArray(chars);
         System.out.println(java.util.Arrays.toString(chars));
+
+        //test it
+        chars = new char[] {'a', 'b', 'c'};
+        chars = reverseArray(chars);
+        System.out.println(Arrays.equals(chars, new char[]{'c', 'b', 'a'}));
+
+        try {
+            reverseArray(null);
+        } catch (RuntimeException ex){
+            System.out.println(ex.getMessage().equals("null arg provided"));
+        }
     }
 
     private static char[] reverseArray(char[] chars) {
