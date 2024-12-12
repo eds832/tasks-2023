@@ -1,4 +1,4 @@
-public class ReverseNum {
+public class ReverseCharArray {
 
     public static void main(String[] args) {
         char[] chars = new char[] {'a', 'b', 'c'};
