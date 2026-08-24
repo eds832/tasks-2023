@@ -11,6 +11,8 @@ void main(String[] args) throws Exception {
         testOOM();
         IO.println("\n" + "=".repeat(55) + "\n");
         testMiddleInsertPerformance();
+        IO.println("\n" + "=".repeat(55) + "\n");
+        testIndexedAdd();
         return;
     }
 
@@ -132,6 +134,48 @@ long benchmarkSequential(List<Integer> list) {
     return System.currentTimeMillis() - start;
 }
 
+void testIndexedAdd() {
+    IO.println("=== Indexed add(index, value) near middle at different list sizes ===");
+    IO.println("ArrayList: O(1) to reach index, O(n) shift via System.arraycopy (native, cache-friendly).");
+    IO.println("LinkedList: O(n) node-by-node traversal to index, then O(1) insert (cache-unfriendly).");
+    IO.println("Unlike ListIterator, here LinkedList pays full traversal cost on every call.\n");
+
+    int[] sizes = {1_000, 5_000, 10_000, 25_000, 50_000, 100_000, 250_000};
+
+    IO.println(String.format("%-12s %12s %12s %20s", "List size", "ArrayList", "LinkedList", "ratio"));
+    IO.println("-".repeat(58));
+
+    for (int size : sizes) {
+        ArrayList<Integer> al = new ArrayList<>(size);
+        LinkedList<Integer> ll = new LinkedList<>();
+        for (int i = 0; i < size; i++) { al.add(i); ll.add(i); }
+
+        long alTime = benchmarkIndexedAdd(new ArrayList<>(al));
+        long llTime = benchmarkIndexedAdd(new LinkedList<>(ll));
+
+        String alStr = alTime == 0 ? "<1 ms" : alTime + " ms";
+        String llStr = llTime == 0 ? "<1 ms" : llTime + " ms";
+        long alForRatio = Math.max(alTime, 1);
+        String ratio = String.format("LL ~%.1fx slower", (double) llTime / alForRatio);
+
+        IO.println(String.format("%-12d %12s %12s %20s", size, alStr, llStr, ratio));
+    }
+
+    IO.println("\n--- What to notice ---");
+    IO.println("LinkedList is slower here despite O(1) insert: traversal to index is O(n) each call.");
+    IO.println("Contrast with ListIterator test: iterator eliminates traversal -> LinkedList wins.");
+    IO.println("Lesson: LinkedList is only fast when you already hold the iterator.");
+}
+
+long benchmarkIndexedAdd(List<Integer> list) {
+    int insertions = list.size() / 10;
+    long start = System.currentTimeMillis();
+    for (int i = 0; i < insertions; i++) {
+        list.add(list.size() / 2, -i);
+    }
+    return System.currentTimeMillis() - start;
+}
+
 /*
 Current max heap: 8088 MB
 Relaunching self with -Xmx256m...
@@ -143,14 +187,14 @@ The smaller the element, the bigger the relative overhead for LinkedList.
 
 Size             ArrayList      LinkedList  AL/LL ratio
 -------------------------------------------------------
-1 B                9230100         5499414         1.68
-16 B               7055976         4704887         1.50
-64 B               3095679         2542186         1.22
-256 B               951044          890130         1.07
-1 KB                252032          248030         1.02
-4 KB                 64112           63799         1.00
-16 KB                15856           15872         1.00
-64 KB                 3777            3777         1.00
+1 B                9230100         5499666         1.68
+16 B               7056848         4705300         1.50
+64 B               3095917         2534206         1.22
+256 B               951434          893218         1.07
+1 KB                251973          247930         1.02
+4 KB                 64122           63807         1.00
+16 KB                15852           15872         1.00
+64 KB                 3776            3778         1.00
 
 --- What to notice ---
 Small elements (1-64 B): AL/LL ratio is high � node overhead is large vs payload.
@@ -166,17 +210,39 @@ LinkedList.add/remove rewires two pointers � O(1) per op.
 
 List size       ArrayList   LinkedList                ratio
 --------------------------------------------------
-1000                 1 ms         1 ms      AL ~1.0x slower
+1000                 2 ms        <1 ms      AL ~2.0x slower
 5000                 1 ms         1 ms      AL ~1.0x slower
-10000                1 ms         2 ms      AL ~0.5x slower
-25000                5 ms         7 ms      AL ~0.7x slower
-50000               12 ms         2 ms      AL ~6.0x slower
-100000              66 ms         4 ms     AL ~16.5x slower
-250000             448 ms         3 ms    AL ~149.3x slower
+10000                2 ms         1 ms      AL ~2.0x slower
+25000                7 ms         8 ms      AL ~0.9x slower
+50000               17 ms         2 ms      AL ~8.5x slower
+100000              85 ms         5 ms     AL ~17.0x slower
+250000             440 ms        26 ms     AL ~16.9x slower
 
 --- What to notice ---
 Small lists: both fast, ratio near 1 (GC noise dominates).
 Large lists: ArrayList time grows quadratically; LinkedList stays nearly flat.
+
+=======================================================
+
+=== Indexed add(index, value) near middle at different list sizes ===
+ArrayList: O(1) to reach index, O(n) shift via System.arraycopy (native, cache-friendly).
+LinkedList: O(n) node-by-node traversal to index, then O(1) insert (cache-unfriendly).
+Unlike ListIterator, here LinkedList pays full traversal cost on every call.
+
+List size       ArrayList   LinkedList                ratio
+----------------------------------------------------------
+1000                <1 ms         1 ms      LL ~1.0x slower
+5000                <1 ms         9 ms      LL ~9.0x slower
+10000               <1 ms         8 ms      LL ~8.0x slower
+25000                3 ms        61 ms     LL ~20.3x slower
+50000               13 ms       255 ms     LL ~19.6x slower
+100000              56 ms      1068 ms     LL ~19.1x slower
+250000             567 ms      5132 ms      LL ~9.1x slower
+
+--- What to notice ---
+LinkedList is slower here despite O(1) insert: traversal to index is O(n) each call.
+Contrast with ListIterator test: iterator eliminates traversal -> LinkedList wins.
+Lesson: LinkedList is only fast when you already hold the iterator.
 
 Process finished with exit code 0
  */
